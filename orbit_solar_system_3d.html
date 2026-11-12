@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#070b1d">
+<title>ORBIT — Explore the Solar System</title>
+<style>
+:root{--bg:#070b1d;--panel:rgba(18,25,53,.72);--line:rgba(255,255,255,.12);--muted:#aab4d2;--white:#f5f7ff;--cyan:#82eaff}
+*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:80px}body{margin:0;background:var(--bg);color:var(--white);font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Arial,sans-serif;overflow-x:hidden}
+body:before{content:"";position:fixed;inset:0;z-index:-2;background:radial-gradient(ellipse at 18% 12%,#18245a 0,transparent 35%),radial-gradient(ellipse at 85% 50%,#17113e 0,transparent 35%),linear-gradient(#070b1d,#090d22 60%,#070b1d)}
+.stars,.stars:before,.stars:after{position:fixed;inset:0;content:"";pointer-events:none;z-index:-1;background-image:radial-gradient(1px 1px at 20px 30px,#fff 98%,transparent),radial-gradient(1px 1px at 90px 140px,#b9dfff 98%,transparent),radial-gradient(2px 2px at 170px 70px,#fff 98%,transparent),radial-gradient(1px 1px at 260px 190px,#fff 98%,transparent);background-size:310px 230px;opacity:.42}.stars:before{transform:translate(80px,100px);opacity:.45}.stars:after{transform:translate(160px,30px);opacity:.3}
+header{position:fixed;z-index:10;top:0;left:0;right:0;height:74px;display:flex;align-items:center;justify-content:space-between;padding:0 clamp(18px,6vw,90px);background:rgba(7,11,29,.72);backdrop-filter:blur(18px);border-bottom:1px solid var(--line)}
+.logo{font-size:19px;font-weight:900;letter-spacing:.22em}.logo span{color:var(--cyan)}nav{display:flex;gap:22px;align-items:center}nav a{font-size:12px;color:#c4cce2;text-decoration:none;letter-spacing:.1em;text-transform:uppercase}nav a:hover{color:var(--cyan)}.menu{display:none;background:none;border:1px solid var(--line);color:white;border-radius:9px;padding:8px}
+.hero{min-height:100vh;display:grid;place-items:center;text-align:center;padding:130px 22px 70px;position:relative;overflow:hidden}
+.eyebrow{font-size:11px;letter-spacing:.35em;text-transform:uppercase;color:var(--cyan);font-weight:800}
+h1{font-size:clamp(48px,9vw,112px);line-height:.94;letter-spacing:-.065em;margin:22px 0 20px;font-weight:850}h1 em{font-style:normal;color:transparent;-webkit-text-stroke:1.5px rgba(220,236,255,.8)}
+.hero p{max-width:610px;color:var(--muted);font-size:clamp(15px,2vw,18px);line-height:1.75;margin:0 auto 30px}
+.cta{display:inline-flex;align-items:center;gap:12px;border:1px solid rgba(130,234,255,.5);border-radius:100px;padding:14px 22px;color:#e8fbff;text-decoration:none;font-size:12px;letter-spacing:.12em;text-transform:uppercase;background:rgba(83,205,238,.08);transition:.25s}.cta:hover{background:rgba(83,205,238,.2);transform:translateY(-3px)}
+.solar-art{position:relative;width:min(80vw,560px);height:min(80vw,560px);max-height:520px;margin:42px auto 0;display:grid;place-items:center}
+.sun{width:24%;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle at 35% 35%,#fff8be,#ffc34c 38%,#f26b28 72%,#9c2a28);box-shadow:0 0 45px #ff9c42,0 0 120px #ff8b3d66,0 0 220px #ff8b3d33;animation:pulse 5s ease-in-out infinite}
+.orbit{position:absolute;border:1px solid rgba(177,205,255,.2);border-radius:50%;width:var(--w);height:var(--w);animation:spin var(--speed) linear infinite}
+.orbit:after{content:"";position:absolute;top:50%;right:-6px;width:12px;height:12px;border-radius:50%;background:var(--c);box-shadow:0 0 16px var(--c)}
+.orbit:nth-child(2){--w:39%;--speed:8s;--c:#b9a18b}.orbit:nth-child(3){--w:55%;--speed:13s;--c:#e7b66c}.orbit:nth-child(4){--w:72%;--speed:19s;--c:#5ca9e8}.orbit:nth-child(5){--w:90%;--speed:27s;--c:#d58a55}
+@keyframes spin{to{transform:rotate(360deg)}}@keyframes pulse{50%{transform:scale(1.05);filter:brightness(1.15)}}
+.scrollhint{position:absolute;bottom:26px;color:#8f9ab9;font-size:10px;letter-spacing:.25em;text-transform:uppercase}.scrollhint:after{content:"";display:block;width:1px;height:35px;background:linear-gradient(var(--cyan),transparent);margin:12px auto 0}
+section{padding:105px clamp(20px,8vw,120px);max-width:1500px;margin:auto}.section-head{display:flex;justify-content:space-between;align-items:end;gap:30px;margin-bottom:38px}.section-head h2{font-size:clamp(32px,5vw,58px);letter-spacing:-.05em;margin:10px 0 0}.section-head p{max-width:400px;color:var(--muted);line-height:1.7;font-size:14px}
+.planet-list{display:grid;gap:18px}.planet-card{display:grid;grid-template-columns:180px 1fr auto;align-items:center;gap:30px;padding:28px;border:1px solid var(--line);border-radius:22px;background:linear-gradient(115deg,rgba(25,34,69,.78),rgba(13,18,42,.65));position:relative;overflow:hidden;transition:.25s}.planet-card:hover{transform:translateY(-4px);border-color:rgba(130,234,255,.4);background:linear-gradient(115deg,rgba(34,48,91,.85),rgba(15,21,49,.8))}
+.planet-visual{height:150px;display:grid;place-items:center;position:relative}.planet-ball{width:var(--size,105px);height:var(--size,105px);border-radius:50%;background:var(--planet);box-shadow:inset -18px -12px 24px #0008,inset 9px 7px 18px #ffffff55,0 0 35px var(--glow);position:relative;overflow:hidden}
+.planet-ball:before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(8deg,transparent 0 12px,#ffffff22 13px 17px,transparent 18px 28px);opacity:.8}
+.planet-ball.ring:after{content:"";position:absolute;width:155%;height:34%;border:9px solid #d8c59b;border-left-color:#9e8a70;border-right-color:#f0dfb8;border-radius:50%;left:-28%;top:35%;transform:rotate(-18deg);box-shadow:0 0 7px #e6d2a5}
+.planet-info .number{font-size:10px;color:var(--cyan);letter-spacing:.2em;font-weight:800}.planet-info h3{font-size:30px;margin:5px 0 8px;letter-spacing:-.04em}.planet-info p{color:var(--muted);line-height:1.65;margin:0;max-width:680px;font-size:14px}.facts{display:flex;gap:22px;flex-wrap:wrap;margin-top:16px}.fact{font-size:11px;color:#aab5d3}.fact b{display:block;color:#f0f5ff;font-size:13px;margin-top:4px}.distance{font-size:11px;color:#8f9cbd;text-align:right;white-space:nowrap}.distance strong{display:block;color:#eaf8ff;font-size:15px;margin-top:6px}
+.sun-card{border-color:#8d613b66;background:linear-gradient(110deg,#4b2b2455,#141b3a99)}.sun-card .planet-ball{background:radial-gradient(circle at 32% 30%,#fff6b4,#ffbf42 45%,#ed5b27 75%);box-shadow:0 0 55px #ff9d38aa}
+.moon-note{color:var(--muted);font-size:13px;line-height:1.7;margin-top:30px;padding:20px 24px;border-left:2px solid var(--cyan);background:#111a35a6;border-radius:0 14px 14px 0}
+.mission{padding:0 clamp(20px,8vw,120px) 110px;max-width:1500px;margin:auto}.mission-inner{border:1px solid var(--line);border-radius:26px;padding:clamp(28px,5vw,60px);background:radial-gradient(circle at 85% 20%,#243b7555,transparent 40%),#111832a8;display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center}.mission h2{font-size:clamp(30px,4vw,48px);letter-spacing:-.05em;margin:12px 0}.mission p{color:var(--muted);line-height:1.75;font-size:14px}.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.stat{padding:20px;border:1px solid var(--line);border-radius:15px;background:#ffffff08}.stat strong{font-size:26px;display:block;color:var(--cyan)}.stat span{font-size:10px;color:#aab5d3;text-transform:uppercase;letter-spacing:.13em}
+footer{border-top:1px solid var(--line);padding:30px 20px;text-align:center;color:#7783a5;font-size:11px;letter-spacing:.12em}
+@media(max-width:760px){nav{display:none;position:absolute;top:73px;left:0;right:0;padding:20px;background:#0b1027;flex-direction:column;border-bottom:1px solid var(--line)}nav.open{display:flex}.menu{display:block}.section-head{display:block}.planet-card{grid-template-columns:100px 1fr;gap:15px;padding:18px}.planet-visual{height:110px}.planet-ball{--size:78px!important}.distance{grid-column:2;text-align:left}.planet-info h3{font-size:24px}.facts{gap:13px}.mission-inner{grid-template-columns:1fr}.hero{padding-top:115px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
+
+#solar3d{padding-top:65px}
+.scene-wrap{position:relative;border:1px solid var(--line);border-radius:26px;overflow:hidden;background:radial-gradient(ellipse at 50% 48%,#17234a 0,#090f27 48%,#050817 100%);min-height:540px;box-shadow:0 25px 80px #0005}
+#space3d{display:block;width:100%;height:540px;touch-action:none;cursor:grab}
+#space3d:active{cursor:grabbing}
+.scene-hud{position:absolute;inset:18px 20px auto;display:flex;justify-content:space-between;align-items:flex-start;gap:12px;pointer-events:none}
+.hud-label{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#b9c8ed;background:#0a1129bb;border:1px solid #ffffff20;border-radius:99px;padding:9px 12px;backdrop-filter:blur(10px)}
+.scene-controls{position:absolute;right:18px;bottom:18px;display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.scene-controls button{border:1px solid #ffffff30;color:#eff7ff;background:#0b1430dd;border-radius:99px;padding:10px 14px;font-size:11px;cursor:pointer;backdrop-filter:blur(10px)}
+.scene-controls button:hover{border-color:var(--cyan);background:#17284b}
+.scene-tip{position:absolute;left:20px;bottom:22px;color:#9eacd0;font-size:11px;pointer-events:none}
+.planet-pop{display:none;position:absolute;left:18px;top:65px;max-width:260px;padding:15px 17px;border-radius:16px;border:1px solid #ffffff30;background:#0a1229eF;backdrop-filter:blur(15px);pointer-events:none}
+.planet-pop.show{display:block}.planet-pop b{display:block;font-size:19px;margin-bottom:5px}.planet-pop span{color:#b3c0df;font-size:12px;line-height:1.5}
+@media(max-width:650px){.scene-wrap{min-height:440px}#space3d{height:440px}.scene-tip{bottom:70px;max-width:190px;line-height:1.5}.scene-hud{inset:12px}.scene-controls{left:12px;right:12px;bottom:12px}.scene-controls button{padding:9px 11px}}
+
+</style>
+</head>
+<body>
+<div class="stars"></div>
+<header><a class="logo" href="#top" style="color:inherit;text-decoration:none">OR<span>·</span>BIT</a><nav id="nav"><a href="#system">The planets</a><a href="#facts">Quick facts</a><a href="#about">About</a></nav><button class="menu" id="menu" aria-label="Toggle navigation">☰</button></header>
+<main id="top">
+<section class="hero">
+<div>
+<div class="eyebrow">A journey through our cosmic neighbourhood</div>
+<h1>THE SOLAR<br><em>SYSTEM</em></h1>
+<p>Eight planets. One star. Countless mysteries. Travel from the blazing surface of the Sun to the frozen edge of our planetary neighbourhood.</p>
+<a class="cta" href="#system">↓ &nbsp; Begin exploring</a>
+<div class="solar-art" aria-label="Stylized illustration of the Sun and planetary orbits"><div class="sun"></div><div class="orbit"></div><div class="orbit"></div><div class="orbit"></div><div class="orbit"></div></div>
+</div><div class="scrollhint">Scroll to explore</div>
+</section>
+
+<section id="solar3d">
+<div class="section-head"><div><div class="eyebrow">Interactive space experience</div><h2>Enter the 3D universe<span style="color:var(--cyan)">.</span></h2></div><p>Watch the planets orbit the Sun. Drag to rotate your view, scroll to zoom, and tap a planet to discover it.</p></div>
+<div class="scene-wrap">
+<canvas id="space3d" aria-label="Interactive 3D-style solar system. Drag to rotate, scroll to zoom, click a planet for details."></canvas>
+<div class="scene-hud"><span class="hud-label">✦ LIVE SOLAR SYSTEM</span><span class="hud-label" id="sceneStatus">ORBIT VIEW · 1× SPEED</span></div>
+<div class="planet-pop" id="planetPop"><b id="popName">Earth</b><span id="popText">Our home planet.</span></div>
+<div class="scene-tip">DRAG TO ROTATE &nbsp;·&nbsp; SCROLL TO ZOOM &nbsp;·&nbsp; TAP A PLANET</div>
+<div class="scene-controls"><button id="pause3d">Ⅱ Pause</button><button id="speed3d">Speed: 1×</button><button id="reset3d">↺ Reset view</button></div>
+</div>
+</section>
+
+<section id="system">
+<div class="section-head"><div><div class="eyebrow">Your cosmic field guide</div><h2>Meet the planets<span style="color:var(--cyan)">.</span></h2></div><p>Explore the worlds orbiting our star, in order from the Sun. Each one has its own atmosphere, landscape and secrets.</p></div>
+<div class="planet-list">
+<article class="planet-card sun-card"><div class="planet-visual"><div class="planet-ball"></div></div><div class="planet-info"><div class="number">THE STAR AT THE CENTER</div><h3>The Sun</h3><p>Our star is a giant ball of hot plasma. Its gravity holds the solar system together, while its light and heat make life on Earth possible.</p><div class="facts"><div class="fact">TYPE<b>G-type star</b></div><div class="fact">AGE<b>4.6 billion years</b></div><div class="fact">CORE TEMP.<b>~15 million °C</b></div></div></div><div class="distance">CENTER<strong>0 AU</strong></div></article>
+<article class="planet-card"><div class="planet-visual"><div class="planet-ball" style="--planet:radial-gradient(circle at 35% 30%,#e5d4b2,#a58d76 60%,#65564c);--glow:#a58d7666;--size:76px"></div></div><div class="planet-info"><div class="number">01 · TERRESTRIAL PLANET</div><h3>Mercury</h3><p>The smallest planet races around the Sun in just 88 Earth days. With almost no atmosphere to trap heat, its surface swings between scorching days and freezing nights.</p><div class="facts"><div class="fact">DAY LENGTH<b>59 Earth days</b></div><div class="fact">MOONS<b>0</b></div><div class="fact">SURFACE<b>Cratered rock</b></div></div></div><div class="distance">FROM SUN<strong>0.39 AU</strong></div></article>
+<article class="planet-card"><div class="planet-visual"><div class="planet-ball" style="--planet:radial-gradient(circle at 35% 30%,#f6dc9a,#d18c48 65%,#84502f);--glow:#e3a45b66"></div></div><div class="planet-info"><div class="number">02 · TERRESTRIAL PLANET</div><h3>Venus</h3><p>Venus is wrapped in thick clouds and has a crushing, carbon-dioxide-rich atmosphere. A runaway greenhouse effect makes it the hottest planet in our solar system.</p><div class="facts"><div class="fact">DAY LENGTH<b>243 Earth days</b></div><div class="fact">MOONS<b>0</b></div><div class="fact">SURFACE TEMP.<b>~465 °C</b></div></div></div><div class="distance">FROM SUN<strong>0.72 AU</strong></div></article>
+<article class="planet-card"><div class="planet-visual"><div class="planet-ball" style="--planet:radial-gradient(circle at 34% 28%,#a9e6ff,#2889c6 55%,#12518e);--glow:#43a9ed77"></div></div><div class="planet-info"><div class="number">03 · TERRESTRIAL PLANET</div><h3>Earth</h3><p>Our home is the only world known to support life. Liquid water covers most of its surface, and its atmosphere protects a remarkable variety of living things.</p><div class="facts"><div class="fact">DAY LENGTH<b>23 h 56 min</b></div><div class="fact">MOONS<b>1</b></div><div class="fact">SURFACE WATER<b>~71%</b></div></div></div><div class="distance">FROM SUN<strong>1.00 AU</strong></div></article>
+<article class="planet-card"><div class="planet-visual"><div class="planet-ball" style="--planet:radial-gradient(circle at 32% 25%,#f2b28a,#bd593b 55%,#6f2b2a);--glow:#d86c4d66"></div></div><div class="planet-info"><div class="number">04 · TERRESTRIAL PLANET</div><h3>Mars</h3><p>The Red Planet has giant volcanoes, ancient river valleys and dusty landscapes. Robotic explorers are studying whether Mars could once have supported microbial life.</p><div class="facts"><div class="fact">DAY LENGTH<b>24 h 37 min</b></div><div class="fact">MOONS<b>2</b></div><div class="fact">KNOWN FOR<b>Olympus Mons</b></div></div></div><div class="distance">FROM SUN<strong>1.52 AU</strong></div></article>
+<article class="planet-card"><div class="planet-visual"><div class="planet-ball" style="--planet:radial-gradient(circle at 30% 25%,#f5dda9,#c18d55 50%,#805533);--glow:#cda46c66;--size:132px"></div></div><div class="planet-info"><div class="number">05 · GAS GIANT</div><h3>Jupiter</h3><p>The largest planet is a giant of swirling clouds and powerful storms. Its Great Red Spot is a colossal storm that has raged for centuries, and it has a huge family of moons.</p><div class="facts"><div class="fact">DAY LENGTH<b>~9 h 56 min</b></div><div class="fact">MOONS<b>95 known</b></div><div class="fact">FEATURE<b>Great Red Spot</b></div></div></div><div class="distance">FROM SUN<strong>5.20 AU</strong></div></article>
+<article class="planet-card"><div class="planet-visual"><div class="planet-ball ring" style="--planet:radial-gradient(circle at 35% 28%,#f6e4ae,#c4a36f 60%,#826b52);--glow:#d4bb8b66;--size:112px"></div></div><div class="planet-info"><div class="number">06 · GAS GIANT</div><h3>Saturn</h3><p>Saturn's spectacular rings are made of countless pieces of ice and rock. The planet is so low in density that, in theory, it would float in a giant enough ocean.</p><div class="facts"><div class="fact">DAY LENGTH<b>~10 h 33 min</b></div><div class="fact">MOONS<b>146 known</b></div><div class="fact">KNOWN FOR<b>Bright ring system</b></div></div></div><div class="distance">FROM SUN<strong>9.58 AU</strong></div></article>
+<article class="planet-card"><div class="planet-visual"><div class="planet-ball" style="--planet:radial-gradient(circle at 35% 28%,#d5f4ed,#77b8b4 60%,#3d777f);--glow:#8bd6d066;--size:100px"></div></div><div class="planet-info"><div class="number">07 · ICE GIANT</div><h3>Uranus</h3><p>This pale blue-green ice giant rotates on its side, giving it extreme seasons. Its atmosphere contains methane, which absorbs red light and gives the planet its colour.</p><div class="facts"><div class="fact">DAY LENGTH<b>~17 h 14 min</b></div><div class="fact">MOONS<b>28 known</b></div><div class="fact">AXIAL TILT<b>~98°</b></div></div></div><div class="distance">FROM SUN<strong>19.2 AU</strong></div></article>
+<article class="planet-card"><div class="planet-visual"><div class="planet-ball" style="--planet:radial-gradient(circle at 35% 28%,#8dbbff,#3263bb 60%,#1a326f);--glow:#578cf077;--size:98px"></div></div><div class="planet-info"><div class="number">08 · ICE GIANT</div><h3>Neptune</h3><p>Dark, cold and distant, Neptune is swept by supersonic winds. It was the first planet located through mathematical predictions before it was seen through a telescope.</p><div class="facts"><div class="fact">DAY LENGTH<b>~16 h 6 min</b></div><div class="fact">MOONS<b>16 known</b></div><div class="fact">KNOWN FOR<b>Powerful winds</b></div></div></div><div class="distance">FROM SUN<strong>30.1 AU</strong></div></article>
+</div>
+<div class="moon-note"><strong style="color:#eaf8ff">What about Pluto?</strong> Pluto is a fascinating dwarf planet in the Kuiper Belt beyond Neptune. It was reclassified as a dwarf planet in 2006, and is still an important member of our solar system.</div>
+</section>
+<div class="mission" id="facts"><div class="mission-inner"><div><div class="eyebrow">The big picture</div><h2>Space is bigger than you think.</h2><p>The distances between planets are enormous. Astronomers use the astronomical unit (AU), the average distance between Earth and the Sun, to measure the solar system. One AU is about 150 million kilometres.</p><p>And beyond Neptune lies the Kuiper Belt, a region filled with icy bodies, dwarf planets and clues to the solar system's earliest days.</p></div><div class="stats"><div class="stat"><strong>8</strong><span>Recognised planets</span></div><div class="stat"><strong>1</strong><span>Our central star</span></div><div class="stat"><strong>4.6B</strong><span>Years old</span></div><div class="stat"><strong>30 AU</strong><span>Neptune's distance</span></div></div></div></div>
+<section id="about" style="padding-top:0"><div class="section-head"><div><div class="eyebrow">Keep looking up</div><h2>Your universe awaits.</h2></div><p>This little tour is just the beginning. Every planet has more moons, storms, mountains and mysteries waiting to be discovered.</p></div><a class="cta" href="#top">↑ &nbsp; Back to the stars</a></section>
+</main>
+<footer>OR·BIT &nbsp; — &nbsp; A LITTLE TOUR OF OUR SOLAR SYSTEM</footer>
+<script>
+const menu=document.getElementById('menu'),nav=document.getElementById('nav');
+menu.addEventListener('click',()=>nav.classList.toggle('open'));
+nav.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>nav.classList.remove('open')));
+
+// Lightweight interactive 3D-style solar system renderer. No libraries or internet required.
+(()=>{
+const canvas=document.getElementById('space3d'),ctx=canvas.getContext('2d');
+if(!canvas||!ctx)return;
+const planets=[
+{name:'Mercury',r:4.2,orbit:58,color:'#b7a18b',period:0.24,desc:'The smallest planet, racing around the Sun.'},
+{name:'Venus',r:6.5,orbit:86,color:'#e5b66e',period:0.62,desc:'A cloud-covered world with an extremely hot surface.'},
+{name:'Earth',r:7,orbit:119,color:'#398ee0',period:1,desc:'Our home: a world of oceans, continents and life.'},
+{name:'Mars',r:5.4,orbit:153,color:'#d66b4d',period:1.88,desc:'The red planet, home to giant volcanoes and ancient valleys.'},
+{name:'Jupiter',r:20,orbit:220,color:'#d6b58a',period:11.86,desc:'The largest planet, with enormous storms and many moons.'},
+{name:'Saturn',r:17,orbit:285,color:'#d9c28f',period:29.4,desc:'A gas giant famous for its spectacular rings.'},
+{name:'Uranus',r:12,orbit:345,color:'#8bd1cf',period:84,desc:'An icy world that spins almost on its side.'},
+{name:'Neptune',r:12,orbit:405,color:'#477fe0',period:165,desc:'A distant blue planet with incredibly fast winds.'}
+];
+let w=0,h=0,dpr=1,rot=-.35,tilt=.35,zoom=1,drag=null,paused=false,speed=1,elapsed=0,last=0,hit=[];
+const stars=Array.from({length:230},()=>({x:Math.random(),y:Math.random(),a:.2+Math.random()*.65,s:.4+Math.random()*1.4}));
+function resize(){const r=canvas.getBoundingClientRect();dpr=Math.min(devicePixelRatio||1,2);w=r.width;h=r.height;canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr);ctx.setTransform(dpr,0,0,dpr,0,0)}
+new ResizeObserver(resize).observe(canvas);resize();
+function project(x,y,z){const cr=Math.cos(rot),sr=Math.sin(rot),ct=Math.cos(tilt),st=Math.sin(tilt);let xx=x*cr-z*sr,zz=x*sr+z*cr,yy=y*ct-zz*st,depth=y*st+zz*ct;const scale=Math.min(w,h)*.00093*zoom;const perspective=850/(850+depth*scale*1.6);return{x:w/2+xx*scale*perspective,y:h/2+yy*scale*perspective,scale:perspective,depth}}
+function sphere(x,y,r,color,shine=1){const g=ctx.createRadialGradient(x-r*.35,y-r*.4,r*.04,x,y,r*1.15);g.addColorStop(0,shine?'#ffffff':'#cbdcff');g.addColorStop(.12,color);g.addColorStop(.72,color);g.addColorStop(1,'#050817');ctx.fillStyle=g;ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill();ctx.strokeStyle='#ffffff22';ctx.lineWidth=.7;ctx.stroke()}
+function draw(t){const dt=Math.min((t-last)/1000||0,.05);last=t;if(!paused)elapsed+=dt*speed;
+ctx.clearRect(0,0,w,h);const bg=ctx.createRadialGradient(w/2,h/2,10,w/2,h/2,Math.max(w,h)*.7);bg.addColorStop(0,'#111d42');bg.addColorStop(1,'#050817');ctx.fillStyle=bg;ctx.fillRect(0,0,w,h);
+for(const s of stars){ctx.globalAlpha=s.a;ctx.fillStyle='#e7f2ff';ctx.beginPath();ctx.arc(s.x*w,s.y*h,s.s,0,Math.PI*2);ctx.fill()}ctx.globalAlpha=1;
+const unit=Math.min(w,h)*.00093*zoom,center=project(0,0,0);
+const orbitPts=[];
+for(let i=0;i<planets.length;i++){const p=planets[i],pts=[];for(let a=0;a<=100;a++){const ang=a/100*Math.PI*2;const q=project(Math.cos(ang)*p.orbit,0,Math.sin(ang)*p.orbit);pts.push(q)}orbitPts.push(pts)}
+ctx.lineWidth=1;ctx.strokeStyle='#a9c8ff25';orbitPts.forEach(pts=>{ctx.beginPath();pts.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));ctx.stroke()});
+const objects=[{kind:'sun',depth:0,x:0,y:0,z:0}];
+planets.forEach((p,i)=>{const angle=elapsed*(.42/p.period)+i*.7;const x=Math.cos(angle)*p.orbit,z=Math.sin(angle)*p.orbit;objects.push({kind:'planet',p,x,y:0,z,depth:project(x,0,z).depth})});
+objects.sort((a,b)=>a.depth-b.depth);hit=[];
+objects.forEach(o=>{const q=project(o.x,o.y,o.z);if(o.kind==='sun'){const r=Math.max(16,Math.min(33,w*.047))*q.scale;const glow=ctx.createRadialGradient(q.x,q.y,r*.2,q.x,q.y,r*3.5);glow.addColorStop(0,'#ffed9b');glow.addColorStop(.25,'#ff9d38aa');glow.addColorStop(1,'#ff7a2200');ctx.fillStyle=glow;ctx.beginPath();ctx.arc(q.x,q.y,r*3.5,0,Math.PI*2);ctx.fill();sphere(q.x,q.y,r,'#ffae3c');ctx.fillStyle='#fff1b2';ctx.font='10px system-ui';ctx.textAlign='center';ctx.fillText('SUN',q.x,q.y+r+15)}else{const p=o.p,r=Math.max(3,p.r*unit*q.scale);if(p.name==='Saturn'){ctx.save();ctx.translate(q.x,q.y);ctx.rotate(-.22+tilt*.3);ctx.strokeStyle='#ddc99cbb';ctx.lineWidth=Math.max(3,r*.38);ctx.beginPath();ctx.ellipse(0,0,r*1.65,r*.55,0,0,Math.PI*2);ctx.stroke();ctx.restore()}sphere(q.x,q.y,r,p.color);ctx.fillStyle='#e8efff';ctx.font='11px system-ui';ctx.textAlign='center';ctx.fillText(p.name,q.x,q.y+r+13);hit.push({x:q.x,y:q.y,r:Math.max(12,r+7),p})}});
+requestAnimationFrame(draw)}
+requestAnimationFrame(draw);
+canvas.addEventListener('pointerdown',e=>{drag={x:e.clientX,y:e.clientY,rot,tilt,moved:false};canvas.setPointerCapture(e.pointerId)});
+canvas.addEventListener('pointermove',e=>{if(!drag)return;const dx=e.clientX-drag.x,dy=e.clientY-drag.y;if(Math.abs(dx)+Math.abs(dy)>3)drag.moved=true;rot=drag.rot+dx*.008;tilt=Math.max(-1.15,Math.min(1.15,drag.tilt+dy*.006))});
+canvas.addEventListener('pointerup',e=>{if(drag&&!drag.moved){const rect=canvas.getBoundingClientRect(),x=e.clientX-rect.left,y=e.clientY-rect.top;let found=hit.slice().reverse().find(p=>Math.hypot(p.x-x,p.y-y)<p.r);if(found){document.getElementById('popName').textContent=found.p.name;document.getElementById('popText').textContent=found.p.desc;document.getElementById('planetPop').classList.add('show')}else document.getElementById('planetPop').classList.remove('show')}drag=null});
+canvas.addEventListener('wheel',e=>{e.preventDefault();zoom=Math.max(.55,Math.min(2.2,zoom*(e.deltaY>0?.91:1.1)))},{passive:false});
+document.getElementById('pause3d').addEventListener('click',e=>{paused=!paused;e.currentTarget.textContent=paused?'▶ Play':'Ⅱ Pause'});
+document.getElementById('speed3d').addEventListener('click',e=>{speed=speed===1?3:speed===3?8:1;e.currentTarget.textContent='Speed: '+speed+'×';document.getElementById('sceneStatus').textContent='ORBIT VIEW · '+speed+'× SPEED'});
+document.getElementById('reset3d').addEventListener('click',()=>{rot=-.35;tilt=.35;zoom=1;document.getElementById('planetPop').classList.remove('show')});
+})();
+
+</script>
+</body>
+</html>
